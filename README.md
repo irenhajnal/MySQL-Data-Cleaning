@@ -49,8 +49,8 @@ World Layoffs: The dataset used for this analysis is the "World_layoffs.csv" fil
       FROM layoffs_staging2
       WHERE row_num >1;
 
-### Standardizing Data
-
+### 2. Standardizing Data
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #### Remove spaces from the company name
             UPDATE layoffs_staging2
             SET company = TRIM(company);
@@ -88,4 +88,29 @@ World Layoffs: The dataset used for this analysis is the "World_layoffs.csv" fil
               ALTER TABLE layoffs_staging2
               MODIFY COLUMN date DATE;
 
-  
+### 2. Handle Null and Blank Values
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#### Filling Missing *'industry'* Values
+
+            UPDATE layoffs_staging2 t1
+            JOIN layoffs_staging2 t2
+            	ON t1.company = t2.company
+                    AND t1.location = t2.location
+            SET t1.industry = t2.industry
+            WHERE
+                t1.industry IS NULL
+                    AND t2.industry IS NOT NULL ;
+
+### 2. Removing Data
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#### Delete all rows where both the total_laid_off and the percentage_laid_off columns are NULL
+            DELETE
+            FROM layoffs_staging2
+            WHERE total_laid_off IS NULL AND percentage_laid_off IS NULL;
+            
+#### Delete the row_num helper column, added earlier to identify duplicates
+
+            ALTER TABLE
+            	layoffs_staging2
+            DROP COLUMN row_num;
+
