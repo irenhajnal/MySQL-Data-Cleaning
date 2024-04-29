@@ -1,4 +1,4 @@
-## MySQL-Data-Cleaning
+## MySQL Data Cleaning
 
 ### Project Overview
 Purpose of the project is to identify, correct and handle inaccuracies, inconsistencies, and errors within the dataset.
